@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\build\\intermediates\\res\\merged\\debug\\layout\\preview.xml",
+        "source": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\src\\main\\res\\layout\\preview.xml"
+    },
+    {
+        "merged": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\build\\intermediates\\res\\merged\\debug\\layout\\tablet.xml",
+        "source": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\src\\main\\res\\layout\\tablet.xml"
+    },
+    {
+        "merged": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\build\\intermediates\\res\\merged\\debug\\layout\\about.xml",
+        "source": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\src\\main\\res\\layout\\about.xml"
+    },
+    {
+        "merged": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\build\\intermediates\\res\\merged\\debug\\layout\\spydroid.xml",
+        "source": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\src\\main\\res\\layout\\spydroid.xml"
+    },
+    {
+        "merged": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\build\\intermediates\\res\\merged\\debug\\layout\\main.xml",
+        "source": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\src\\main\\res\\layout\\main.xml"
+    }
+]

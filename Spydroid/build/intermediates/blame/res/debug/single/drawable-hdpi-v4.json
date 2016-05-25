@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\settings.png",
+        "source": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\src\\main\\res\\drawable-hdpi\\settings.png"
+    },
+    {
+        "merged": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\icon.png",
+        "source": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\src\\main\\res\\drawable-hdpi\\icon.png"
+    },
+    {
+        "merged": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\check.png",
+        "source": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\src\\main\\res\\drawable-hdpi\\check.png"
+    },
+    {
+        "merged": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\background.png",
+        "source": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\src\\main\\res\\drawable-hdpi\\background.png"
+    },
+    {
+        "merged": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi-v4\\quit.png",
+        "source": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\src\\main\\res\\drawable-hdpi\\quit.png"
+    }
+]
