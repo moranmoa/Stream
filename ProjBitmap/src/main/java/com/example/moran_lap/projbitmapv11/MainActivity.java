@@ -1,5 +1,7 @@
 package com.example.moran_lap.projbitmapv11;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -7,6 +9,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +19,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,10 +31,14 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int UPDATE_IMAGE = 1;
+    private static final int NOTIFY_DATA_SET_CHANGED = 2;
     private Composer mComposer;
+    public static Object locker= new Object();
 
     // ImageView - Preview
     private ImageView mImageView;
@@ -72,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        SCadapter = new SurfaceComponentAdapter(mSurfaceComponents,this);
+        SCadapter = new SurfaceComponentAdapter(mSurfaceComponents,this, handler);
         mRecyclerView.setAdapter(SCadapter);
 
         ItemTouchHelper.Callback callback =
@@ -98,48 +108,120 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 //Creating the instance of PopupMenu
-                PopupMenu popup = new PopupMenu(MainActivity.this, fab);
+                final PopupMenu popup = new PopupMenu(MainActivity.this, fab);
                 //Inflating the Popup using xml file
                 popup.getMenuInflater().inflate(R.menu.plus_popup_menu, popup.getMenu());
 
                 //registering popup with OnMenuItemClickListener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                    @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch(item.getItemId()){
-                            case (R.id.camera_source) :
-                                mSurfaceComponents.add(new SurfaceComponent(CameraSource,new Position()));
-                                //paint.setColor(Color.GREEN);
-                                //canvas.drawRect(20F, 300F, 180F, 400F, paint); // left top right bottom
-                                //mImageView.invalidate();
-                                //mImageView.refreshDrawableState();
-                                break;
-                            case (R.id.image_source) :
-                                loadImageFromGallery();
-                                break;
-                            case (R.id.text_source) :
-                                String text = "Test Text Source";
-                                Position pos = new Position(20, 500, 180, 400);
-                                ImageSource textSource = new TextSource(text,pos);
-                                mSurfaceComponents.add(new SurfaceComponent(textSource,pos));
-                                break;
-                            case (R.id.screen_source) :
-                                SurfaceComponent screenComponent = new SurfaceComponent(new ScreenSource(),new Position());
-                                //screenComponent.Enable();
-                                mSurfaceComponents.add(screenComponent);
-                                //synchronized (mObj) {
-                                //    mObj.notify();
-                                //}
-                                break;
+                        synchronized (locker) {
+                            switch (item.getItemId()) {
+                                case (R.id.camera_source):
+                                    mSurfaceComponents.add(new SurfaceComponent(CameraSource, new Position()));
+                                    //paint.setColor(Color.GREEN);
+                                    //canvas.drawRect(20F, 300F, 180F, 400F, paint); // left top right bottom
+                                    //mImageView.invalidate();
+                                    //mImageView.refreshDrawableState();
+                                    break;
+                                case (R.id.image_source):
+                                    loadImageFromGallery();
+                                    break;
+                                case (R.id.text_source):
+                                    String text = "Test Text Source";
+                                    Position pos = new Position(20, 500, 180, 400);
+                                    ImageSource textSource = new TextSource(text, pos);
+                                    mSurfaceComponents.add(new SurfaceComponent(textSource, pos));
+                                    break;
+                                case (R.id.screen_source):
+                                    SurfaceComponent screenComponent = new SurfaceComponent(new ScreenSource(), new Position());
+                                    //screenComponent.Enable();
+                                    mSurfaceComponents.add(screenComponent);
+                                    break;
+                            }
+                            //popup.dismiss();
+                            SCadapter.swap((ArrayList<SurfaceComponent>) mSurfaceComponents.clone());
+                            refreshSurfaceComponentsOnBitmap();
+                            return true;
                         }
-                        onListViewChanged();
-                        return true;
                     }
                 });
                 popup.show();//showing popup menu
             }
         });
+        //startService(new Intent(getBaseContext(),Composer.class));
+
+        Intent alarm = new Intent(ApplicationContext.getActivity(),RefreshReceiver.class);
+        boolean alarmRunning = (PendingIntent.getBroadcast(ApplicationContext.getActivity(),0,alarm,PendingIntent.FLAG_NO_CREATE)!=null);
+        if (!alarmRunning){
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(ApplicationContext.getActivity(),0,alarm,0);
+            AlarmManager alarmManager = (AlarmManager)getSystemService(ApplicationContext.getActivity().ALARM_SERVICE);
+            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),16,pendingIntent);
+        }
+
+        runThread();
     }
 
+    private void runThread() {
+
+        new Thread() {
+            public void run() {
+                //Toast.makeText(ApplicationContext.getActivity(),"Service is running" + i,Toast.LENGTH_LONG).show();
+                //i++;
+                while (true) {
+                    synchronized (locker) {
+                        refreshSurfaceComponentsOnBitmap();
+
+                        Message msg = handler.obtainMessage();
+                        msg.what = UPDATE_IMAGE;
+                        msg.obj = mComposer.getBackgroundBitmap();
+                        handler.sendMessage(msg);
+                    }
+                    try {
+                        Thread.sleep(16);
+                    }catch (Exception ex){
+
+                    }
+                }
+            }
+        }.start();
+    }
+
+    final Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            synchronized (locker) {
+                if (msg.what == UPDATE_IMAGE) {
+                    Canvas canvas = new Canvas(mComposer.getmPreviewBitmap());
+                    canvas.drawBitmap(mComposer.getBackgroundBitmap(), 0, 0, null);
+                    mComposer.getImageView().invalidate();
+                    mComposer.getImageView().postInvalidate();
+                }
+                if (msg.what == NOTIFY_DATA_SET_CHANGED) {
+                    SCadapter.notifyDataSetChanged();
+                }
+            }
+            super.handleMessage(msg);
+        }
+    };
+
+    private Runnable myTask = new Runnable() {
+        @Override
+        public void run() {
+            //Toast.makeText(ApplicationContext.getActivity(),"Service is running" + i,Toast.LENGTH_LONG).show();
+            //i++;
+            while (true) {
+                refreshSurfaceComponentsOnBitmap();
+                try {
+                    Thread.sleep(16);
+                }catch (Exception ex){
+
+                }
+            }
+        }
+    };
     public void loadImageFromGallery() {
         // Create intent to Open Image applications like Gallery, Google Photos
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
@@ -180,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
                 imageBitmap = Bitmap.createScaledBitmap(imageBitmap,pos.getWidth(),pos.getHeight(),true);
                 //set the surface component bitmap with imageBitmap
                 pictureComponent.setSurfaceComponentBitmap(imageBitmap);
-                ((MainActivity)ApplicationContext.getActivity()).onListViewChanged();
+                ((MainActivity)ApplicationContext.getActivity()).refreshSurfaceComponentsOnBitmap();
             } else {
                 Toast.makeText(this, "You haven't picked Image",
                         Toast.LENGTH_LONG).show();
@@ -191,19 +273,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void onListViewChanged(){
-        refreshSurfaceComponentsOnBitmap();
-    }
-
     public void refreshSurfaceComponentsOnBitmap(){
-        SCadapter.swap((ArrayList<SurfaceComponent>) mSurfaceComponents.clone());
+        //SCadapter.swap((ArrayList<SurfaceComponent>) mSurfaceComponents.clone());
         mComposer.initBitmap();
         ArrayList<SurfaceComponent> reversedSurfaceComponents = new ArrayList<>(mSurfaceComponents);
         Collections.reverse(reversedSurfaceComponents);
         for (SurfaceComponent sc : reversedSurfaceComponents){
             if (sc.isEnabled()){
                 Bitmap bitmapToDraw = sc.DrawSurfaceComponentOnBitmap();
-                Canvas canvas = new Canvas(mComposer.getBitmap());
+                Canvas canvas = new Canvas(mComposer.getBackgroundBitmap());
                 canvas.drawBitmap(bitmapToDraw, sc.getImagePositionOnSurface().getxStart(), sc.getImagePositionOnSurface().getyStart(), null);
             }
         }
@@ -260,4 +338,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

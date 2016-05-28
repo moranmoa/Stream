@@ -12,4 +12,6 @@
     <string name="x_end">x end</string>
     <string name="y_start">y start</string>
     <string name="y_end">y end</string>
+    <string name="service_name">Refresh Service</string>
+
 </resources>

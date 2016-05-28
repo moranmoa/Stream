@@ -1,107 +1,117 @@
 package com.example.moran_lap.projbitmapv11;
 
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.Toast;
+
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Gili on 08/04/2016.
  */
-public class Composer extends Thread {
+public class Composer extends Service {
 
-    private Bitmap mBitmap;
+    private Bitmap mBackgroundBitmap;
+    private Bitmap mPreviewBitmap;
     private ImageView mImageView;
     private ArrayList<SurfaceComponent> mSurfaceComponents;
     private Object mObj;
 
-    public Composer(){
-
+    public Composer() {
         mSurfaceComponents = new ArrayList();
         mObj = new Object();
         initPreview();
     }
 
-    private void initPreview(){
-        mImageView = (ImageView)ApplicationContext.getActivity().findViewById(R.id.imageView);
+    private void initPreview() {
+        mImageView = (ImageView) ApplicationContext.getActivity().findViewById(R.id.imageView);
         initBitmap();
 
-    }
-
-    void initBitmap(){
-        mBitmap = Bitmap.createBitmap(1280, 720, Bitmap.Config.ARGB_8888);
-        mBitmap.eraseColor(Color.BLACK);
-        mImageView.setImageBitmap(mBitmap);
-        //mImageView.invalidate();
     }
 
     public ImageView getImageView() {
         return mImageView;
     }
 
+    void initBitmap() {
+        if (mBackgroundBitmap == null) {
+            mBackgroundBitmap = Bitmap.createBitmap(1280, 720, Bitmap.Config.ARGB_8888);
+            mBackgroundBitmap.eraseColor(Color.BLACK);
+        }
+        if (mPreviewBitmap == null) {
+            mPreviewBitmap = Bitmap.createBitmap(1280, 720, Bitmap.Config.ARGB_8888);
+            mPreviewBitmap.eraseColor(Color.BLACK);
+            mImageView.setImageBitmap(mPreviewBitmap);
+        }
+    }
+
     public ArrayList<SurfaceComponent> getmSurfaceComponents() {
         return mSurfaceComponents;
     }
 
-    public Bitmap getBitmap() {
-        return mBitmap;
+    public Bitmap getBackgroundBitmap() {
+        return mBackgroundBitmap;
     }
 
-//    public void run() {
-//        try {
-//            synchronized (mObj) {
-//                mObj.wait();
-//            }
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        while (true) {
-//            if (mSurfaceComponents != null) {
-//                for (SurfaceComponent surfaceComponent : mSurfaceComponents) {
-//                    if (surfaceComponent.isEnabled()) {
-//                        surfaceComponent.start();
-//                    }
-//                }
-//                for (SurfaceComponent surfaceComponent : mSurfaceComponents) {
-//                    try {
-//                        surfaceComponent.join();
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//        /*
-//        for(int i=0; i<1280; i++)
-//            for(int j=0; j<720; j++) {
-//                for (SurfaceComponent surfaceComponent : mSurfaceComponents) {
-//                    if (surfaceComponent.isEnabled()) {
-//                        if (i>=)
-//                    }
-//                }
-//            }
-//            */
-//                for (SurfaceComponent surfaceComponent : mSurfaceComponents) {
-//                    if (surfaceComponent.isEnabled()) {
-//                       // paint.setColor(Color.GREEN);
-//                       // canvas.drawRect(20F, 300F, 180F, 400F, paint);
-//                        //mBitmap=surfaceComponent.getBitmap();
-//                    }
-//                }
-//            }
-//            try {
-//                sleep(30);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+    public Bitmap getmPreviewBitmap() {
+        return mPreviewBitmap;
+    }
+    public void setPreviewBitmap(Bitmap mPreviewBitmap) {
+        this.mPreviewBitmap = mPreviewBitmap;
+    }
+
+    private boolean isRunning;
+    private Context context;
+    private Thread backgroundThread;
+    private MainActivity mainActivity;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        this.isRunning = false;
+        this.context = this;
+        this.backgroundThread = new Thread(myTask);
+        this.mainActivity = (MainActivity) ApplicationContext.getActivity();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        //Toast.makeText(this,"Service Started",Toast.LENGTH_LONG).show();
+        //refreshSurfaceComponentsOnBitmap();
+        if (!this.isRunning) {
+            this.isRunning = true;
+            this.backgroundThread.start();
+        }
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        // super.onDestroy();
+        this.isRunning = false;
+        // Toast.makeText(this,"Service Stopped",Toast.LENGTH_LONG).show();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    private Runnable myTask = new Runnable() {
+        @Override
+        public void run() {
+            //Toast.makeText(ApplicationContext.getActivity(),"Service is running" + i,Toast.LENGTH_LONG).show();
+            //i++;
+            //mainActivity.refreshSurfaceComponentsOnBitmap();
+            stopSelf();
+        }
+    };
 }
 
 

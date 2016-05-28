@@ -89,7 +89,7 @@ public class TextSource extends ImageSource {
             public void onClick(DialogInterface dialog, int which) {
                 text = input.getText().toString();
                 bitmap = Bitmap.createBitmap(position.getWidth(),position.getHeight(), Bitmap.Config.ARGB_8888);
-                ((MainActivity)ApplicationContext.getActivity()).onListViewChanged();
+                ((MainActivity)ApplicationContext.getActivity()).refreshSurfaceComponentsOnBitmap();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

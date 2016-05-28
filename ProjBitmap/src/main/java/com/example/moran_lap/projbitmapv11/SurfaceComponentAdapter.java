@@ -3,6 +3,8 @@ package com.example.moran_lap.projbitmapv11;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -27,12 +29,15 @@ import java.util.List;
  */
 public class SurfaceComponentAdapter extends RecyclerView.Adapter<SurfaceComponentAdapter.SurfaceComponentViewHolder> implements ItemTouchHelperAdapter {
 
-    private List<SurfaceComponent> surfaceComponents;
+    protected List<SurfaceComponent> surfaceComponents;
     private MainActivity mainActivity;
+    private Handler handler;
+    private static final int NOTIFY_DATA_SET_CHANGED = 2;
 
-    public SurfaceComponentAdapter(List<SurfaceComponent> surfaceComponents, MainActivity mainActivity){
+    public SurfaceComponentAdapter(List<SurfaceComponent> surfaceComponents, MainActivity mainActivity, Handler handler){
         this.surfaceComponents = surfaceComponents;
         this.mainActivity = mainActivity;
+        this.handler = handler;
     }
 
     @Override
@@ -58,7 +63,7 @@ public class SurfaceComponentAdapter extends RecyclerView.Adapter<SurfaceCompone
                 SurfaceComponent sp = (SurfaceComponent)checkbox.getTag();
                 sp.setIsEnabled(checkbox.isChecked());
                 Toast.makeText(ApplicationContext.getActivity(), "Clicked on Source " + sp.getImageSource().getSourceName() + " State is: " + sp.isEnabled(), Toast.LENGTH_SHORT).show();
-                mainActivity.onListViewChanged();
+                mainActivity.refreshSurfaceComponentsOnBitmap();
             }
         });
         holder.optionsButton.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +111,7 @@ public class SurfaceComponentAdapter extends RecyclerView.Adapter<SurfaceCompone
                                         SurfaceComponent sComponent = surfaceComponents.get(position);
                                         Position newPosition = new Position(xStart,xEnd,yStart,yEnd);
                                         sComponent.setImagePositionOnSurface(newPosition);
-                                        ((MainActivity)ApplicationContext.getActivity()).onListViewChanged();
+                                        ((MainActivity)ApplicationContext.getActivity()).refreshSurfaceComponentsOnBitmap();
                                     }
                                 })
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -123,9 +128,10 @@ public class SurfaceComponentAdapter extends RecyclerView.Adapter<SurfaceCompone
                                 break;
                             case (R.id.delete_surface_component) :
                                 surfaceComponents.remove(surfaceComponents.get(position));
+                                swap((ArrayList<SurfaceComponent>) surfaceComponents);
                                 break;
                         }
-                        ((MainActivity)ApplicationContext.getActivity()).onListViewChanged();
+                        ((MainActivity)ApplicationContext.getActivity()).refreshSurfaceComponentsOnBitmap();
                         return true;
                     }
                 });
@@ -142,30 +148,37 @@ public class SurfaceComponentAdapter extends RecyclerView.Adapter<SurfaceCompone
     public void swap(ArrayList<SurfaceComponent> datas){
         surfaceComponents.clear();
         surfaceComponents.addAll(datas);
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
+        Message msg = handler.obtainMessage();
+        msg.what = NOTIFY_DATA_SET_CHANGED;
+        handler.sendMessage(msg);
     }
 
     @Override
     public void onItemDismiss(int position) {
-        surfaceComponents.remove(position);
-        notifyItemRemoved(position);
-        mainActivity.onListViewChanged();
+        synchronized (mainActivity.locker) {
+            surfaceComponents.remove(position);
+            notifyItemRemoved(position);
+            swap((ArrayList<SurfaceComponent>) surfaceComponents);
+            mainActivity.refreshSurfaceComponentsOnBitmap();
+        }
     }
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
-
-        if (fromPosition < toPosition) {
-            for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(surfaceComponents, i, i + 1);
+        synchronized (mainActivity.locker) {
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(surfaceComponents, i, i + 1);
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    Collections.swap(surfaceComponents, i, i - 1);
+                }
             }
-        } else {
-            for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(surfaceComponents, i, i - 1);
-            }
+            notifyItemMoved(fromPosition, toPosition);
+            mainActivity.refreshSurfaceComponentsOnBitmap();
         }
-        notifyItemMoved(fromPosition, toPosition);
-        mainActivity.onListViewChanged();
         return true;
     }
 
