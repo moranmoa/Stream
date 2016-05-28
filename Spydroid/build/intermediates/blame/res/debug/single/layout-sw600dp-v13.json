@@ -1,14 +1,14 @@
 [
     {
-        "merged": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\build\\intermediates\\res\\merged\\debug\\layout-sw600dp-v13\\spydroid.xml",
-        "source": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\src\\main\\res\\layout-sw600dp\\spydroid.xml"
+        "merged": "C:\\Users\\Gili\\AndroidStudioProjects\\Stream\\Spydroid\\build\\intermediates\\res\\merged\\debug\\layout-sw600dp-v13\\spydroid.xml",
+        "source": "C:\\Users\\Gili\\AndroidStudioProjects\\Stream\\Spydroid\\src\\main\\res\\layout-sw600dp\\spydroid.xml"
     },
     {
-        "merged": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\build\\intermediates\\res\\merged\\debug\\layout-sw600dp-v13\\preview.xml",
-        "source": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\src\\main\\res\\layout-sw600dp\\preview.xml"
+        "merged": "C:\\Users\\Gili\\AndroidStudioProjects\\Stream\\Spydroid\\build\\intermediates\\res\\merged\\debug\\layout-sw600dp-v13\\preview.xml",
+        "source": "C:\\Users\\Gili\\AndroidStudioProjects\\Stream\\Spydroid\\src\\main\\res\\layout-sw600dp\\preview.xml"
     },
     {
-        "merged": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\build\\intermediates\\res\\merged\\debug\\layout-sw600dp-v13\\tablet.xml",
-        "source": "C:\\Users\\moran\\AndroidStudioProjects\\spydroid-ipcamera\\Spydroid\\src\\main\\res\\layout-sw600dp\\tablet.xml"
+        "merged": "C:\\Users\\Gili\\AndroidStudioProjects\\Stream\\Spydroid\\build\\intermediates\\res\\merged\\debug\\layout-sw600dp-v13\\tablet.xml",
+        "source": "C:\\Users\\Gili\\AndroidStudioProjects\\Stream\\Spydroid\\src\\main\\res\\layout-sw600dp\\tablet.xml"
     }
 ]
