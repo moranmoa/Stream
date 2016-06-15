@@ -232,48 +232,51 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        try {
-            // When an Image is picked
-            if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK
-                    && null != data) {
-                // Get the Image from data
-                Uri selectedImage = data.getData();
-                String[] filePathColumn = { MediaStore.Images.Media.DATA };
-                // Get the cursor
-                Cursor cursor = getContentResolver().query(selectedImage,
-                        filePathColumn, null, null, null);
-                cursor.moveToFirst(); // Move to first row
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        synchronized (lock) {
+            try {
+                // When an Image is picked
+                if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK
+                        && null != data) {
+                    // Get the Image from data
+                    Uri selectedImage = data.getData();
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                    // Get the cursor
+                    Cursor cursor = getContentResolver().query(selectedImage,
+                            filePathColumn, null, null, null);
+                    cursor.moveToFirst(); // Move to first row
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
 
-                String imgDecodableString = cursor.getString(columnIndex);
-                cursor.close();
+                    String imgDecodableString = cursor.getString(columnIndex);
+                    cursor.close();
 
-                File image = new File(imgDecodableString);
-                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-                Bitmap imageBitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
+                    File image = new File(imgDecodableString);
+                    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                    Bitmap imageBitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
 
-                PictureSource pictureSource = new PictureSource();
-                //set the original source bitmap with imageBitmap
-                pictureSource.setOriginalSourceBitmap(imageBitmap);
-                Position pos = new Position(0,100,0,100);
-                SurfaceComponent pictureComponent = new SurfaceComponent(pictureSource,pos);
-                mSurfaceComponents.add(pictureComponent);
-                imageBitmap = Bitmap.createScaledBitmap(imageBitmap,pos.getWidth(),pos.getHeight(),true);
-                //set the surface component bitmap with imageBitmap
-                pictureComponent.setSurfaceComponentBitmap(imageBitmap);
-                //((MainActivity)ApplicationContext.getActivity()).refreshSurfaceComponentsOnBitmap();
-            } else {
-                Toast.makeText(this, "You haven't picked Image",
-                        Toast.LENGTH_LONG).show();
+                    PictureSource pictureSource = new PictureSource();
+                    //set the original source bitmap with imageBitmap
+                    pictureSource.setOriginalSourceBitmap(imageBitmap);
+                    Position pos = new Position(0, 300, 0, 300);
+                    SurfaceComponent pictureComponent = new SurfaceComponent(pictureSource, pos);
+                    pictureComponent.setImagePositionOnSurface(pos);
+                    mSurfaceComponents.add(pictureComponent);
+                    SCadapter.swap((ArrayList<SurfaceComponent>) mSurfaceComponents.clone());
+                    imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pos.getWidth(), pos.getHeight(), true);
+                    //set the surface component bitmap with imageBitmap
+                    pictureComponent.setSurfaceComponentBitmap(imageBitmap);
+                    //((MainActivity)ApplicationContext.getActivity()).refreshSurfaceComponentsOnBitmap();
+                } else {
+                    Toast.makeText(this, "You haven't picked Image",
+                            Toast.LENGTH_LONG).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(this, e.toString(), Toast.LENGTH_LONG)
+                        .show();
             }
-        } catch (Exception e) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG)
-                    .show();
         }
     }
 
     public void refreshSurfaceComponentsOnBitmap(){
-        //SCadapter.swap((ArrayList<SurfaceComponent>) mSurfaceComponents.clone());
         mComposer.initBitmap();
         ArrayList<SurfaceComponent> reversedSurfaceComponents = new ArrayList<>(mSurfaceComponents);
         Collections.reverse(reversedSurfaceComponents);

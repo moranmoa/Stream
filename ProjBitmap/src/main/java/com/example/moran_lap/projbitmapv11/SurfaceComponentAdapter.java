@@ -172,6 +172,8 @@ public class SurfaceComponentAdapter extends RecyclerView.Adapter<SurfaceCompone
                 }
             }
             notifyItemMoved(fromPosition, toPosition);
+            //swap((ArrayList<SurfaceComponent>) surfaceComponents);
+            swap(new ArrayList(surfaceComponents));
             //mainActivity.refreshSurfaceComponentsOnBitmap();
         }
         return true;

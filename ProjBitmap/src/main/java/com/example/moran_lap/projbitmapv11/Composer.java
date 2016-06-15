@@ -36,10 +36,10 @@ public class Composer {//extends Service {
     }
 
     void initBitmap() {
-        if (mBackgroundBitmap == null) {
+        //if (mBackgroundBitmap == null) {
             mBackgroundBitmap = Bitmap.createBitmap(1280, 720, Bitmap.Config.ARGB_8888);
             mBackgroundBitmap.eraseColor(Color.BLACK);
-        }
+        //}
         if (mPreviewBitmap == null) {
             mPreviewBitmap = Bitmap.createBitmap(1280, 720, Bitmap.Config.ARGB_8888);
             mPreviewBitmap.eraseColor(Color.BLACK);
