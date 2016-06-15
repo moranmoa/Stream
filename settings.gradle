@@ -1,1 +1,1 @@
-include ':app', ':ProjBitmap', ':RecycleView', ':Spydroid'
+include ':ProjBitmap', ':RecycleView'

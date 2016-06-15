@@ -1,11 +1,23 @@
 [
     {
-        "merged": "C:\\Users\\Gili\\AndroidStudioProjects\\Stream\\Spydroid\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\icon.png",
-        "source": "C:\\Users\\Gili\\AndroidStudioProjects\\Stream\\Spydroid\\src\\main\\res\\drawable-mdpi\\icon.png"
+        "merged": "C:\\Users\\Moran-Lap\\AndroidStudioProjects\\Stream\\Spydroid\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\settings.png",
+        "source": "C:\\Users\\Moran-Lap\\AndroidStudioProjects\\Stream\\Spydroid\\src\\main\\res\\drawable-mdpi\\settings.png"
+    },
+    {
+        "merged": "C:\\Users\\Moran-Lap\\AndroidStudioProjects\\Stream\\Spydroid\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\quit.png",
+        "source": "C:\\Users\\Moran-Lap\\AndroidStudioProjects\\Stream\\Spydroid\\src\\main\\res\\drawable-mdpi\\quit.png"
     },
     {
         "merged": "C:\\Users\\Gili\\AndroidStudioProjects\\Stream\\Spydroid\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\settings.png",
         "source": "C:\\Users\\Gili\\AndroidStudioProjects\\Stream\\Spydroid\\src\\main\\res\\drawable-mdpi\\settings.png"
+    },
+    {
+        "merged": "C:\\Users\\Gili\\AndroidStudioProjects\\Stream\\Spydroid\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\icon.png",
+        "source": "C:\\Users\\Gili\\AndroidStudioProjects\\Stream\\Spydroid\\src\\main\\res\\drawable-mdpi\\icon.png"
+    },
+    {
+        "merged": "C:\\Users\\Moran-Lap\\AndroidStudioProjects\\Stream\\Spydroid\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\icon.png",
+        "source": "C:\\Users\\Moran-Lap\\AndroidStudioProjects\\Stream\\Spydroid\\src\\main\\res\\drawable-mdpi\\icon.png"
     },
     {
         "merged": "C:\\Users\\Gili\\AndroidStudioProjects\\Stream\\Spydroid\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\quit.png",

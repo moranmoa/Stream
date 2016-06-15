@@ -2,5 +2,9 @@
     {
         "merged": "C:\\Users\\Gili\\AndroidStudioProjects\\Stream\\Spydroid\\build\\intermediates\\res\\merged\\debug\\xml\\preferences.xml",
         "source": "C:\\Users\\Gili\\AndroidStudioProjects\\Stream\\Spydroid\\src\\main\\res\\xml\\preferences.xml"
+    },
+    {
+        "merged": "C:\\Users\\Moran-Lap\\AndroidStudioProjects\\Stream\\Spydroid\\build\\intermediates\\res\\merged\\debug\\xml\\preferences.xml",
+        "source": "C:\\Users\\Moran-Lap\\AndroidStudioProjects\\Stream\\Spydroid\\src\\main\\res\\xml\\preferences.xml"
     }
 ]

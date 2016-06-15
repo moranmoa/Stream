@@ -4,9 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ProjBitmap/ProjBitmap.iml" filepath="$PROJECT_DIR$/ProjBitmap/ProjBitmap.iml" />
       <module fileurl="file://$PROJECT_DIR$/RecycleView/RecycleView.iml" filepath="$PROJECT_DIR$/RecycleView/RecycleView.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Spydroid/Spydroid.iml" filepath="$PROJECT_DIR$/Spydroid/Spydroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/Stream.iml" filepath="$PROJECT_DIR$/Stream.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
 </project>
