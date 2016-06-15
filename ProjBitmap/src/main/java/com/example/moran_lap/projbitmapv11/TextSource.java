@@ -39,7 +39,7 @@ public class TextSource extends ImageSource {
         Canvas canvas = new Canvas(bitmap);
 
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.WHITE); // Text Color
+        paint.setColor(Color.GREEN); // Text Color
         paint.setStrokeWidth(12); // Text Size
 
         paint.setTextSize((int) (14 * scale));

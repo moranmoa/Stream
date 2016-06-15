@@ -118,13 +118,15 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem item) {
                         synchronized (lock) {
                             switch (item.getItemId()) {
-                                case (R.id.camera_source):
-                                    mSurfaceComponents.add(new SurfaceComponent(CameraSource, new Position()));
+                                case (R.id.camera_source): {
+                                    Position pos = new Position(900, 1280, 500, 720);
+                                    mSurfaceComponents.add(new SurfaceComponent(CameraSource, pos));
                                     //paint.setColor(Color.GREEN);
                                     //canvas.drawRect(20F, 300F, 180F, 400F, paint); // left top right bottom
                                     //mImageView.invalidate();
                                     //mImageView.refreshDrawableState();
                                     break;
+                                }
                                 case (R.id.image_source):
                                     loadImageFromGallery();
                                     break;
@@ -256,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
                     PictureSource pictureSource = new PictureSource();
                     //set the original source bitmap with imageBitmap
                     pictureSource.setOriginalSourceBitmap(imageBitmap);
-                    Position pos = new Position(0, 300, 0, 300);
+                    Position pos = new Position(850, 1280, 0, 400);
                     SurfaceComponent pictureComponent = new SurfaceComponent(pictureSource, pos);
                     pictureComponent.setImagePositionOnSurface(pos);
                     mSurfaceComponents.add(pictureComponent);

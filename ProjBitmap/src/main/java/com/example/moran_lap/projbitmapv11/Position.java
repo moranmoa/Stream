@@ -13,9 +13,9 @@ public class Position {
     public Position(){
 
         xStart = 0;
-        xEnd = 600;
+        xEnd = 1280;
         yStart = 0;
-        yEnd = 600;
+        yEnd = 720;
     }
 
     public Position(int xStart, int xEnd, int yStart, int yEnd){
