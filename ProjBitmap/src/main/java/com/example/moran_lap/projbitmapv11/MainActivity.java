@@ -19,7 +19,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,14 +30,13 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int UPDATE_IMAGE = 1;
     private static final int NOTIFY_DATA_SET_CHANGED = 2;
     private Composer mComposer;
-    public static Object locker= new Object();
+    public static Object lock;
 
     // ImageView - Preview
     private ImageView mImageView;
@@ -65,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        lock = new Object();
         // set MainActivity to be the global context of this application
         ApplicationContext.setActivity(this);
 
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        synchronized (locker) {
+                        synchronized (lock) {
                             switch (item.getItemId()) {
                                 case (R.id.camera_source):
                                     mSurfaceComponents.add(new SurfaceComponent(CameraSource, new Position()));
@@ -143,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                             //popup.dismiss();
                             SCadapter.swap((ArrayList<SurfaceComponent>) mSurfaceComponents.clone());
-                            refreshSurfaceComponentsOnBitmap();
+                            //refreshSurfaceComponentsOnBitmap();
                             return true;
                         }
                     }
@@ -153,13 +152,13 @@ public class MainActivity extends AppCompatActivity {
         });
         //startService(new Intent(getBaseContext(),Composer.class));
 
-        Intent alarm = new Intent(ApplicationContext.getActivity(),RefreshReceiver.class);
-        boolean alarmRunning = (PendingIntent.getBroadcast(ApplicationContext.getActivity(),0,alarm,PendingIntent.FLAG_NO_CREATE)!=null);
-        if (!alarmRunning){
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(ApplicationContext.getActivity(),0,alarm,0);
-            AlarmManager alarmManager = (AlarmManager)getSystemService(ApplicationContext.getActivity().ALARM_SERVICE);
-            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),16,pendingIntent);
-        }
+//        Intent alarm = new Intent(ApplicationContext.getActivity(),RefreshReceiver.class);
+//        boolean alarmRunning = (PendingIntent.getBroadcast(ApplicationContext.getActivity(),0,alarm,PendingIntent.FLAG_NO_CREATE)!=null);
+//        if (!alarmRunning){
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(ApplicationContext.getActivity(),0,alarm,0);
+//            AlarmManager alarmManager = (AlarmManager)getSystemService(ApplicationContext.getActivity().ALARM_SERVICE);
+//            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),16,pendingIntent);
+//        }
 
         runThread();
     }
@@ -171,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 //Toast.makeText(ApplicationContext.getActivity(),"Service is running" + i,Toast.LENGTH_LONG).show();
                 //i++;
                 while (true) {
-                    synchronized (locker) {
+                    synchronized (lock) {
                         refreshSurfaceComponentsOnBitmap();
 
                         Message msg = handler.obtainMessage();
@@ -192,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
     final Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            synchronized (locker) {
+            synchronized (lock) {
                 if (msg.what == UPDATE_IMAGE) {
                     Canvas canvas = new Canvas(mComposer.getmPreviewBitmap());
                     canvas.drawBitmap(mComposer.getBackgroundBitmap(), 0, 0, null);
@@ -207,21 +206,21 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private Runnable myTask = new Runnable() {
-        @Override
-        public void run() {
-            //Toast.makeText(ApplicationContext.getActivity(),"Service is running" + i,Toast.LENGTH_LONG).show();
-            //i++;
-            while (true) {
-                refreshSurfaceComponentsOnBitmap();
-                try {
-                    Thread.sleep(16);
-                }catch (Exception ex){
-
-                }
-            }
-        }
-    };
+//    private Runnable myTask = new Runnable() {
+//        @Override
+//        public void run() {
+//            //Toast.makeText(ApplicationContext.getActivity(),"Service is running" + i,Toast.LENGTH_LONG).show();
+//            //i++;
+//            while (true) {
+//                refreshSurfaceComponentsOnBitmap();
+//                try {
+//                    Thread.sleep(16);
+//                }catch (Exception ex){
+//
+//                }
+//            }
+//        }
+//    };
     public void loadImageFromGallery() {
         // Create intent to Open Image applications like Gallery, Google Photos
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,
@@ -262,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
                 imageBitmap = Bitmap.createScaledBitmap(imageBitmap,pos.getWidth(),pos.getHeight(),true);
                 //set the surface component bitmap with imageBitmap
                 pictureComponent.setSurfaceComponentBitmap(imageBitmap);
-                ((MainActivity)ApplicationContext.getActivity()).refreshSurfaceComponentsOnBitmap();
+                //((MainActivity)ApplicationContext.getActivity()).refreshSurfaceComponentsOnBitmap();
             } else {
                 Toast.makeText(this, "You haven't picked Image",
                         Toast.LENGTH_LONG).show();

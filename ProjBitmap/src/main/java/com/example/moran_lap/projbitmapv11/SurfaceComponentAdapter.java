@@ -2,19 +2,14 @@ package com.example.moran_lap.projbitmapv11;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -63,7 +58,7 @@ public class SurfaceComponentAdapter extends RecyclerView.Adapter<SurfaceCompone
                 SurfaceComponent sp = (SurfaceComponent)checkbox.getTag();
                 sp.setIsEnabled(checkbox.isChecked());
                 Toast.makeText(ApplicationContext.getActivity(), "Clicked on Source " + sp.getImageSource().getSourceName() + " State is: " + sp.isEnabled(), Toast.LENGTH_SHORT).show();
-                mainActivity.refreshSurfaceComponentsOnBitmap();
+                //mainActivity.refreshSurfaceComponentsOnBitmap();
             }
         });
         holder.optionsButton.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +106,7 @@ public class SurfaceComponentAdapter extends RecyclerView.Adapter<SurfaceCompone
                                         SurfaceComponent sComponent = surfaceComponents.get(position);
                                         Position newPosition = new Position(xStart,xEnd,yStart,yEnd);
                                         sComponent.setImagePositionOnSurface(newPosition);
-                                        ((MainActivity)ApplicationContext.getActivity()).refreshSurfaceComponentsOnBitmap();
+                                        //((MainActivity)ApplicationContext.getActivity()).refreshSurfaceComponentsOnBitmap();
                                     }
                                 })
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -131,7 +126,7 @@ public class SurfaceComponentAdapter extends RecyclerView.Adapter<SurfaceCompone
                                 swap((ArrayList<SurfaceComponent>) surfaceComponents);
                                 break;
                         }
-                        ((MainActivity)ApplicationContext.getActivity()).refreshSurfaceComponentsOnBitmap();
+                        //((MainActivity)ApplicationContext.getActivity()).refreshSurfaceComponentsOnBitmap();
                         return true;
                     }
                 });
@@ -156,17 +151,17 @@ public class SurfaceComponentAdapter extends RecyclerView.Adapter<SurfaceCompone
 
     @Override
     public void onItemDismiss(int position) {
-        synchronized (mainActivity.locker) {
+        synchronized (mainActivity.lock) {
             surfaceComponents.remove(position);
             notifyItemRemoved(position);
             swap((ArrayList<SurfaceComponent>) surfaceComponents);
-            mainActivity.refreshSurfaceComponentsOnBitmap();
+            //mainActivity.refreshSurfaceComponentsOnBitmap();
         }
     }
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
-        synchronized (mainActivity.locker) {
+        synchronized (mainActivity.lock) {
             if (fromPosition < toPosition) {
                 for (int i = fromPosition; i < toPosition; i++) {
                     Collections.swap(surfaceComponents, i, i + 1);
@@ -177,7 +172,7 @@ public class SurfaceComponentAdapter extends RecyclerView.Adapter<SurfaceCompone
                 }
             }
             notifyItemMoved(fromPosition, toPosition);
-            mainActivity.refreshSurfaceComponentsOnBitmap();
+            //mainActivity.refreshSurfaceComponentsOnBitmap();
         }
         return true;
     }
